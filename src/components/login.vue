@@ -1,7 +1,7 @@
 <template>
   <div class="login">
     <!-- header -->
-    <div class="container">
+    <!-- <div class="container">
       <div class="row header">
         <div class="col-xs-12">
           <img src="../../static/images/logo.png" alt="">
@@ -9,16 +9,16 @@
           <span>欢迎登录</span>
         </div>
       </div>
-    </div>
+    </div> -->
     <!-- 登录框 -->
     <div class="content">
       <div class="bg_img">
         <img src="../../static/images/beijing.png" alt="">
         <div class="denglu">
           <p class="font">用户登录</p>
-          <p class="inp user_name"><input type="text" placeholder="请输入用户名"></p>
-          <p class="inp paww"><input type="text" placeholder="请输入密码"></p>
-          <p class="loin"><router-link to="/publics"><span> 立即登录 </span></router-link></p>
+          <p class="inp user_name"><input type="text" placeholder="请输入用户名" v-model="account"></p>
+          <p class="inp paww"><input type="password" placeholder="请输入密码" v-model="password"></p>
+          <p class="loin"><router-link to="/home"><span @click="login"> 立即登录 </span></router-link></p>
           <p class="xieyi xieyis"><span>请查看并同意卡佑天行的用户协议：</span></p>
           <p class="xieyi"><span><input type="checkbox">我接受卡佑天行的用户协议和隐私政策</span> </p>
         </div>
@@ -39,7 +39,32 @@ export default {
   name: 'login',
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App'
+      msg: 'Welcome to Your Vue.js App',
+      account: '',
+      password: ''
+    }
+  },
+  methods: {
+    login () {
+      // 获取已有账号密码
+        this.$http.get('/api/login/getAccount')
+          .then((response) => {
+            // 响应成功回调
+            console.log(response)
+            let params = { 
+              account : this.account,
+              password : this.password
+            };
+            // 创建一个账号密码
+            return this.$http.post('/api/login/createAccount',params);
+          })
+          .then((response) => {
+            //响应失败回调
+            console.log(response)
+          })
+          .catch((reject) => {
+            console.log(reject)
+          });
     }
   }
 }
@@ -61,8 +86,13 @@ legend { color:#000; }
 fieldset, img { border:0; }
 button, input, select, textarea { font-size:100%; }
 table { border-collapse:collapse; border-spacing:0; }
+.login{
+  position: absolute;
+  // top: 0;
+}
 .header{
-  padding: 22px 0;
+  padding: 4px 0;
+  height: 80px;
 }
 .shuxian{
   display: inline-block;
